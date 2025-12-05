@@ -286,8 +286,46 @@
         let shouldResetDisplay = false;
         let lastResult = null;
 
+        // Функция форматирования числа с разделителями разрядов
+        function formatNumberWithSeparators(numStr) {
+            // Если это не число или ошибка, возвращаем как есть
+            if (numStr === 'Ошибка' || numStr === '' || numStr === undefined || numStr === null) {
+                return numStr;
+            }
+
+            // Если строка содержит операторы (+, *, /, ×) или минус не в начале - это выражение
+            // Проверяем наличие операторов, кроме минуса в самом начале
+            if (/[+*/×]/.test(numStr) || (numStr.includes('-') && numStr.indexOf('-') > 0)) {
+                return numStr; // Это выражение, не форматируем
+            }
+
+            // Проверяем, является ли это числом
+            const num = parseFloat(numStr);
+            if (isNaN(num)) {
+                return numStr; // Возвращаем как есть, если не число
+            }
+
+            // Разделяем на целую и дробную части
+            const parts = numStr.split('.');
+            let integerPart = parts[0];
+            const decimalPart = parts.length > 1 ? '.' + parts[1] : '';
+
+            // Проверяем знак
+            const isNegative = integerPart.startsWith('-');
+            if (isNegative) {
+                integerPart = integerPart.substring(1);
+            }
+
+            // Добавляем разделители разрядов (пробелы каждые 3 цифры)
+            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+            // Возвращаем с учётом знака
+            return (isNegative ? '-' : '') + integerPart + decimalPart;
+        }
+
         function updateDisplay() {
-            display.textContent = currentInput;
+            // Форматируем число перед отображением (только если это число без операторов)
+            display.textContent = formatNumberWithSeparators(currentInput);
         }
 
         function appendNumber(number) {
