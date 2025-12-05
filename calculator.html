@@ -11,6 +11,11 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -190,6 +195,7 @@
         /* Ночная тема */
         body.night-theme {
             background: #1a1a2e;
+            overflow: hidden;
         }
 
         body.night-theme .calculator {
@@ -324,12 +330,16 @@
 
         function calculate() {
             try {
+                // Сохраняем исходное выражение для вывода в консоль
+                const originalExpression = currentInput;
+                
                 // Заменяем × на * для вычисления
                 let expression = currentInput.replace(/×/g, '*');
                 
                 // Проверяем на деление на ноль
                 if (expression.includes('/0') && !expression.includes('/0.')) {
                     currentInput = 'Ошибка';
+                    console.log('Выражение:', originalExpression, '→ Результат: Ошибка (деление на ноль)');
                     updateDisplay();
                     shouldResetDisplay = true;
                     return;
@@ -339,14 +349,18 @@
                 
                 if (isNaN(result) || !isFinite(result)) {
                     currentInput = 'Ошибка';
+                    console.log('Выражение:', originalExpression, '→ Результат: Ошибка');
                 } else {
                     currentInput = result.toString();
+                    console.log('Выражение:', originalExpression, '→ Результат:', result);
                 }
                 
                 updateDisplay();
                 shouldResetDisplay = true;
             } catch (error) {
+                const originalExpression = currentInput;
                 currentInput = 'Ошибка';
+                console.log('Выражение:', originalExpression, '→ Результат: Ошибка при вычислении');
                 updateDisplay();
                 shouldResetDisplay = true;
             }
