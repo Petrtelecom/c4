@@ -127,9 +127,124 @@
         .zero {
             grid-column: span 2;
         }
+
+        /* Переключатель темы в виде ёлочного украшения */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        .ornament-hook {
+            width: 8px;
+            height: 15px;
+            background: linear-gradient(to bottom, #8B4513, #654321);
+            margin: 0 auto;
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .ornament-ball {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: -2px auto 0;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset -10px -10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .ornament-ball.day {
+            background: radial-gradient(circle at 30% 30%, #FFD700, #FFA500);
+            border: 3px solid #FF8C00;
+        }
+
+        .ornament-ball.night {
+            background: radial-gradient(circle at 30% 30%, #4169E1, #1E90FF);
+            border: 3px solid #000080;
+        }
+
+        .ornament-ball::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            top: 20%;
+            left: 25%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Ночная тема */
+        body.night-theme {
+            background: #1a1a2e;
+        }
+
+        body.night-theme .calculator {
+            background: #16213e;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        body.night-theme .display {
+            background: #0f0f1e;
+            color: #00ff88;
+        }
+
+        body.night-theme button {
+            background: #2a2a3e;
+            color: #e0e0e0;
+        }
+
+        body.night-theme button:hover {
+            background: #3a3a4e;
+        }
+
+        body.night-theme .operator {
+            background: #4a5568;
+        }
+
+        body.night-theme .operator:hover {
+            background: #5a6578;
+        }
+
+        body.night-theme .equals {
+            background: #2d3748;
+        }
+
+        body.night-theme .equals:hover {
+            background: #3d4758;
+        }
+
+        body.night-theme .clear {
+            background: #742a2a;
+        }
+
+        body.night-theme .clear:hover {
+            background: #843a3a;
+        }
     </style>
 </head>
 <body>
+    <!-- Переключатель темы в виде ёлочного украшения -->
+    <div class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+        <div class="ornament-hook"></div>
+        <div class="ornament-ball day" id="ornamentBall">
+            <span id="ornamentIcon">☀</span>
+        </div>
+    </div>
+
     <div class="calculator">
         <div class="display" id="display">0</div>
         <div class="buttons">
@@ -302,6 +417,28 @@
 
         // Создаём снежинки периодически
         setInterval(createSnowflake, 300);
+
+        // Переключение темы
+        let isNightTheme = false;
+
+        function toggleTheme() {
+            isNightTheme = !isNightTheme;
+            const body = document.body;
+            const ornamentBall = document.getElementById('ornamentBall');
+            const ornamentIcon = document.getElementById('ornamentIcon');
+
+            if (isNightTheme) {
+                body.classList.add('night-theme');
+                ornamentBall.classList.remove('day');
+                ornamentBall.classList.add('night');
+                ornamentIcon.textContent = '🌙';
+            } else {
+                body.classList.remove('night-theme');
+                ornamentBall.classList.remove('night');
+                ornamentBall.classList.add('day');
+                ornamentIcon.textContent = '☀';
+            }
+        }
     </script>
 </body>
 </html>
