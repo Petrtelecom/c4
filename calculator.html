@@ -33,8 +33,9 @@
             top: -10px;
             color: white;
             font-size: 1em;
-            font-family: Arial, sans-serif;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
             animation: fall linear infinite;
             pointer-events: none;
             user-select: none;
@@ -283,6 +284,7 @@
         let display = document.getElementById('display');
         let currentInput = '0';
         let shouldResetDisplay = false;
+        let lastResult = null;
 
         function updateDisplay() {
             display.textContent = currentInput;
@@ -352,6 +354,7 @@
                     console.log('Выражение:', originalExpression, '→ Результат: Ошибка');
                 } else {
                     currentInput = result.toString();
+                    lastResult = result.toString(); // Сохраняем последний результат
                     console.log('Выражение:', originalExpression, '→ Результат:', result);
                 }
                 
@@ -413,19 +416,27 @@
             }
         });
 
-        // Создание падающих снежинок
+        // Создание падающих чисел (последний результат)
         function createSnowflake() {
-            const snowflake = document.createElement('div');
-            snowflake.className = 'snowflake';
-            snowflake.innerHTML = '❄';
-            snowflake.style.left = Math.random() * 100 + '%';
-            snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            snowflake.style.opacity = Math.random() * 0.7 + 0.3;
-            snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
-            document.body.appendChild(snowflake);
+            // Показываем только если результат валидный (не ошибка)
+            if (lastResult === 'Ошибка' || !lastResult) {
+                return;
+            }
+
+            const numberElement = document.createElement('div');
+            numberElement.className = 'snowflake';
+            numberElement.innerHTML = lastResult;
+            numberElement.style.left = Math.random() * 100 + '%';
+            numberElement.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            numberElement.style.opacity = Math.random() * 0.7 + 0.3;
+            numberElement.style.fontSize = (Math.random() * 15 + 15) + 'px';
+            numberElement.style.fontWeight = 'bold';
+            numberElement.style.color = '#ffffff';
+            numberElement.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5)';
+            document.body.appendChild(numberElement);
 
             setTimeout(() => {
-                snowflake.remove();
+                numberElement.remove();
             }, 5000);
         }
 
